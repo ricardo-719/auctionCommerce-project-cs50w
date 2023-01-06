@@ -13,21 +13,21 @@ class User(AbstractUser):
     #passwordHash = models.CharField()
 
 class AuctionListings(models.Model):
-    LISTING_CATEGORIES = (
-        ('Home'),
-        ('Fashion'),
-        ('Toys'),
-        ('Electronics'),
-        ('Baby'),
-        ('Automotive'),
-        ('Other'),
-    )
+    #LISTING_CATEGORIES = (
+        #('Home'),
+        #('Fashion'),
+        #('Toys'),
+        #('Electronics'),
+        #('Baby'),
+        #('Automotive'),
+        #('Other'),
+    #)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemTitle = models.CharField(max_length=80)
     itemDescription = models.CharField(max_length=450)
     listingImg = models.CharField(max_length=100)
     initialBid = models.IntegerField()
-    category = models.CharField(max_length=15, choices=LISTING_CATEGORIES)
+    #category = models.CharField(max_length=15, choices=LISTING_CATEGORIES)
     isActive = models.BooleanField(default=True)
     date = models.DateField()
 
