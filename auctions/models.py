@@ -32,6 +32,9 @@ class AuctionListings(models.Model):
     isActive = models.BooleanField(default=True)
     date = models.DateField()
 
+    def __str__(self):
+        return self.itemTitle
+
 #class Bids(models.Model):
     #user = models.CharField(max_length=64)
     #bid = models.IntegerField()
