@@ -13,21 +13,22 @@ class User(AbstractUser):
     #passwordHash = models.CharField()
 
 class AuctionListings(models.Model):
-    #LISTING_CATEGORIES = (
-        #('Home'),
-        #('Fashion'),
-        #('Toys'),
-        #('Electronics'),
-        #('Baby'),
-        #('Automotive'),
-        #('Other'),
-    #)
+    LISTING_CATEGORIES = [
+        ('OTH', 'Other'),
+        ('HOM', 'Home'),
+        ('FAS', 'Fashion'),
+        ('TOY', 'Toys'),
+        ('ELE', 'Electronics'),
+        ('BAB', 'Baby'),
+        ('AUT', 'Automotive'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemTitle = models.CharField(max_length=80)
     itemDescription = models.CharField(max_length=450)
-    listingImg = models.CharField(max_length=100)
-    initialBid = models.IntegerField()
-    #category = models.CharField(max_length=15, choices=LISTING_CATEGORIES)
+    # Requires the Pillow library (pip install Pillow)
+    listingImg = models.ImageField(max_length=250)
+    initialBid = models.DecimalField(max_digits=10, decimal_places=2)
+    category = models.CharField(max_length=15, choices=LISTING_CATEGORIES, default=LISTING_CATEGORIES[0][0])
     isActive = models.BooleanField(default=True)
     date = models.DateField()
 
