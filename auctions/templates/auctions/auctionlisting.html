@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h1>List New Auction</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <div id="newListingForm" class="formContainer">
+        <!--input class="form-control w-75 mb-1 ml-2" autocomplete="off" autofocus type="text" name="auctionTitle" placeholder="Auction Title">
+        <textarea class="form-control w-75 mb-1 ml-2" type="text" name="auctionDescription" rows="15" wrap="soft" 
+        maxlength="10000" class="form-control" autocomplete="off" 
+        placeholder="Auction Description"></textarea>
+        <input class="form-control w-25 mb-1 ml-2" autocomplete="off" autofocus type="number" step=".01" name="startingBid" placeholder="Starting Bid (USD)"-->
+        <span class="p-2">Auction Title: </span>
+        {{ form.itemTitle|safe }}
+        <span class="p-2">Auction Description: </span>
+        {{ form.itemDescription|safe }}
+        <br>
+        <span class="p-2">Initial Bid: </span>
+        {{ form.initialBid|safe }}
+        <span class="p-2">Category: </span>
+        {{ form.category|safe }}
+        <span class="p-2">Upload Image: </span>
+        {{ form.listingImg|safe }}
+    </div>
+    <input class="btn btn-info mt-2 ml-2" type="submit" value="Post" name="listBtn">
+</form>
+
+{% endblock %}

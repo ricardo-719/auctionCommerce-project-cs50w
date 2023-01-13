@@ -25,8 +25,8 @@ class AuctionListings(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemTitle = models.CharField(max_length=80)
     itemDescription = models.CharField(max_length=450)
-    # Requires the Pillow library (pip install Pillow)
-    listingImg = models.ImageField(max_length=250)
+    # ImageField requires the Pillow library (pip install Pillow), this field is optional
+    listingImg = models.CharField(max_length=250, null=True, blank=True)
     initialBid = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=15, choices=LISTING_CATEGORIES, default=LISTING_CATEGORIES[0][0])
     isActive = models.BooleanField(default=True)
