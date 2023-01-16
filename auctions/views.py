@@ -104,11 +104,8 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def new_listings(request):
-    #MUST ADD A LOGIN DECORATOR 
-    #ADD CURRENT USER INSIDE A VARIABLE AND MUST BE INCLUDED IN THE DATABASE ENTRY
     #listing = AuctionListings.objects.all()
     form = AuctionListingsForm(request.POST)
-    # if form.is_valid(): but remember that this field is optional
     if request.method == "POST":
         if form.is_valid():
             title = request.POST["itemTitle"]
@@ -116,14 +113,15 @@ def new_listings(request):
             bid = request.POST["initialBid"]
             category = request.POST["category"]
             imgUrl = request.POST["listingImg"]
+            print(request.user)
             print(title)
             print(description)
             print(bid)
             print(category)
             print(imgUrl)
             print(datetime.now().strftime("%Y/%m/%d, %H:%M"))
-            #f = AuctionListings(itemTitle=title, itemDescription=description, initialBid=bid, listingImg=imgUrl, category=category, date=datetime.now().strftime("%Y-%m-%d"))
-            #f.save()
+            f = AuctionListings(user=request.user, itemTitle=title, itemDescription=description, initialBid=bid, listingImg=imgUrl, category=category, date=datetime.now().strftime("%Y-%m-%d"))
+            f.save()
         return render(request, "auctions/auctionlisting.html")
     else:
         return render(request, "auctions/auctionlisting.html", {
