@@ -126,3 +126,10 @@ def new_listings(request):
         return render(request, "auctions/auctionlisting.html", {
         "form": AuctionListingsForm()
         })
+
+def listings_page(request, name):
+    item = AuctionListings.objects.filter(itemTitle=name)
+    print(item)
+    return render(request, "auctions/listingPage.html", {
+        "item": item
+    })
