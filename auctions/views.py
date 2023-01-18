@@ -51,7 +51,6 @@ def index(request):
         "listing": listing
     })
 
-
 def login_view(request):
     if request.method == "POST":
 
@@ -122,7 +121,7 @@ def new_listings(request):
             print(datetime.now().strftime("%Y/%m/%d, %H:%M"))
             f = AuctionListings(user=request.user, itemTitle=title, itemDescription=description, initialBid=bid, listingImg=imgUrl, category=category, date=datetime.now().strftime("%Y-%m-%d"))
             f.save()
-        return render(request, "auctions/auctionlisting.html")
+        return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/auctionlisting.html", {
         "form": AuctionListingsForm()
