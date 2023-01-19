@@ -35,6 +35,13 @@ class AuctionListings(models.Model):
     def __str__(self):
         return self.itemTitle
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    itemTitle = models.CharField(max_length=80)
+
+    def __str__(self):
+        return self.itemTitle
+
 #class Bids(models.Model):
     #user = models.CharField(max_length=64)
     #bid = models.IntegerField()

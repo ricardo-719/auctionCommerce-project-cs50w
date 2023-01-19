@@ -3,10 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import AuctionListings
+from .models import AuctionListings, User, Watchlist
 from django import forms
 from django.forms import ModelForm, TextInput, Textarea, NumberInput, Select
-from .models import User
 from datetime import datetime
 
 #class newListing(forms.Form):
@@ -129,7 +128,29 @@ def new_listings(request):
 
 def listings_page(request, name):
     item = AuctionListings.objects.filter(itemTitle=name)
-    print(item)
+    watchlistStatus = Watchlist.objects.filter(itemTitle=name)
+    print(watchlistStatus)
     return render(request, "auctions/listingPage.html", {
-        "item": item
+        "item": item,
+        "watchlistStatus": watchlistStatus
     })
+
+def watchlist_registry(request):
+    if request.method == "POST":
+        item = request.POST["title"]
+        print(item)
+        print(len(item))
+        if Watchlist.objects.filter(itemTitle=item):
+            print('WL deleted')
+            itemDb = Watchlist.objects.get(itemTitle=item)
+            print(itemDb)
+            itemDb.delete()
+            #when the item has more than one name the 20% has to be dealt with.. find a way to modify names to not have spaces with potentially a method 
+            return HttpResponseRedirect(reverse(f"/${item}"))
+        else:
+            print('WL saved')
+            f = Watchlist(user=request.user, itemTitle=item)
+            f.save()
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        return HttpResponseRedirect(reverse("index"))
