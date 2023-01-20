@@ -145,12 +145,11 @@ def watchlist_registry(request):
             itemDb = Watchlist.objects.get(itemTitle=item)
             print(itemDb)
             itemDb.delete()
-            #when the item has more than one name the 20% has to be dealt with.. find a way to modify names to not have spaces with potentially a method 
-            return HttpResponseRedirect(reverse(f"/${item}"))
+            return listings_page(request, item)
         else:
             print('WL saved')
             f = Watchlist(user=request.user, itemTitle=item)
             f.save()
-            return HttpResponseRedirect(reverse("index"))
+            return listings_page(request, item)
     else:
         return HttpResponseRedirect(reverse("index"))
