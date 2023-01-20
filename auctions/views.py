@@ -135,21 +135,24 @@ def listings_page(request, name):
         "watchlistStatus": watchlistStatus
     })
 
+# This function handles the watchlist requests
 def watchlist_registry(request):
     if request.method == "POST":
-        item = request.POST["title"]
-        print(item)
-        print(len(item))
-        if Watchlist.objects.filter(itemTitle=item):
-            print('WL deleted')
-            itemDb = Watchlist.objects.get(itemTitle=item)
-            print(itemDb)
-            itemDb.delete()
-            return listings_page(request, item)
+        # If user is not logged in redirect the login page
+        if request.user.is_authenticated:
+            item = request.POST["title"]
+            if Watchlist.objects.filter(itemTitle=item):
+                print('WL deleted')
+                itemDb = Watchlist.objects.get(itemTitle=item)
+                print(itemDb)
+                itemDb.delete()
+                return listings_page(request, item)
+            else:
+                print('WL saved')
+                f = Watchlist(user=request.user, itemTitle=item)
+                f.save()
+                return listings_page(request, item)
         else:
-            print('WL saved')
-            f = Watchlist(user=request.user, itemTitle=item)
-            f.save()
-            return listings_page(request, item)
+            return render(request, "auctions/login.html")
     else:
         return HttpResponseRedirect(reverse("index"))
