@@ -24,7 +24,11 @@
                 {% endif %}
             {% endfor %}
         </form>
-        <p>{{ attribute.initialBid }}</p>
+        {% if currentBid > attribute.initialBid %}
+            <p>{{ currentBid }}</p>
+        {% else %}
+            <p>{{ attribute.initialBid }}</p>
+        {% endif %}
         <p>Owner: {{ attribute.user }}</p>
         <p>Category: {{ attribute.get_category_display }}</p>
     </div>

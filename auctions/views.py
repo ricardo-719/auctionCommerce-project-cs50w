@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import AuctionListings, User, Watchlist
+from .models import AuctionListings, User, Watchlist, Bids
 from django import forms
 from django.forms import ModelForm, TextInput, Textarea, NumberInput, Select
 from datetime import datetime
@@ -129,11 +129,23 @@ def new_listings(request):
 def listings_page(request, name):
     item = AuctionListings.objects.filter(itemTitle=name)
     watchlistStatus = Watchlist.objects.filter(itemTitle=name)
-    print(watchlistStatus)
-    return render(request, "auctions/listingPage.html", {
-        "item": item,
-        "watchlistStatus": watchlistStatus
-    })
+    currentBid = 0
+    if Bids.objects.filter(itemTitle=name):
+        # Django query that filters and orders by bid amount taking highest bid
+        highestBid = Bids.objects.filter(itemTitle=name).order_by('bid')
+        for bid in highestBid:
+            currentBid = bid.bid
+        return render(request, "auctions/listingPage.html", {
+            "item": item,
+            "watchlistStatus": watchlistStatus,
+            "currentBid": currentBid
+        })
+    else:
+        return render(request, "auctions/listingPage.html", {
+            "item": item,
+            "watchlistStatus": watchlistStatus,
+            "currentBid": currentBid
+        })
 
 # This function handles the watchlist requests
 def watchlist_registry(request):

@@ -35,18 +35,21 @@ class AuctionListings(models.Model):
     def __str__(self):
         return self.itemTitle
 
+# Consider changing itemTitle to ForeignKey for better manipulation of the databases
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    itemTitle = models.ForeignKey(AuctionListings, on_delete=models.CASCADE)
-    #itemTitle = models.CharField(max_length=80)
+    itemTitle = models.CharField(max_length=80)
 
     def __str__(self):
         return self.itemTitle
 
 class Bids(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    itemTitle = models.ForeignKey(AuctionListings, on_delete=models.CASCADE)
+    itemTitle = models.CharField(max_length=80)
     bid = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.itemTitle
 
 #class Comments(models.Model):
     #user = models.CharField(max_length=64)
