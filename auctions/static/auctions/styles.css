@@ -6,6 +6,11 @@ body {
     display: flex;
 }
 
+#bidForm {
+    visibility: hidden;
+    margin-top: 1%;
+}
+
 /*#newListingForm {
     margin-left: 3%;
 }*/
