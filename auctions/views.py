@@ -36,7 +36,8 @@ class AuctionListingsForm(ModelForm):
             }),
             'category': Select(attrs={
                 'class': "form-control",
-                'style': 'max-width: 150px'
+                'style': 'max-width: 150px',
+                'id': 'categoryFormId'
             }),
             'listingImg': TextInput(attrs={
                 'class': "form-control",
@@ -47,7 +48,8 @@ class AuctionListingsForm(ModelForm):
 def index(request):
     listing = AuctionListings.objects.all()
     return render(request, "auctions/index.html", {
-        "listing": listing
+        "listing": listing,
+        "form": AuctionListingsForm()
     })
 
 def login_view(request):
