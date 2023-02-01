@@ -47,10 +47,18 @@ class AuctionListingsForm(ModelForm):
 
 def index(request):
     listing = AuctionListings.objects.all()
-    return render(request, "auctions/index.html", {
-        "listing": listing,
-        "form": AuctionListingsForm()
-    })
+    if request.method == "POST":
+        queryCategory = request.POST["category"]
+        filteredListing = AuctionListings.objects.filter(category=queryCategory)
+        return render(request, "auctions/index.html", {
+            "listing": filteredListing,
+            "form": AuctionListingsForm()
+        })
+    else:
+        return render(request, "auctions/index.html", {
+            "listing": listing,
+            "form": AuctionListingsForm()
+        })
 
 def login_view(request):
     if request.method == "POST":
