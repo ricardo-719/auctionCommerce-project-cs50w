@@ -41,7 +41,7 @@ class Bids(models.Model):
     bid = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.itemTitle
+        return f"{ self.itemTitle } / Bid: { self.bid } / User: { self.user }"
 
 #class Comments(models.Model):
     #user = models.CharField(max_length=64)

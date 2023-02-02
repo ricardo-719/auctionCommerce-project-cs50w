@@ -4,12 +4,18 @@ body {
 
 #itemGeneralInfo {
     display: flex;
-    color: blue;
 }
 
 #bidForm {
     display: block;
-    border: 1px solid red;
+}
+
+.info {
+    background-color: rgba(250, 0, 0, 0.5);
+}
+
+.success {
+    background-color: rgba(0, 250, 0, 0.5);
 }
 
 /*#newListingForm {

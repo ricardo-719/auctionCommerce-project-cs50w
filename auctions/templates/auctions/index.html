@@ -12,7 +12,7 @@
     <ul>
         {% for item in listing %}
             <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
-            <p>Current Bid: USD$<b><i>{{ item.initialBid }}</i></b></p>
+            <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
             <p></p><i>{{ item.itemDescription }}</i></p>
             {% if item.listingImg == "" %}
             <img src="" alt="" hidden="true">

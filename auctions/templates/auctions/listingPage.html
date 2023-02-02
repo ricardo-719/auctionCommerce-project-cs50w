@@ -25,15 +25,25 @@
             {% endfor %}
         </form>
         {% if currentBid > attribute.initialBid %}
-            <p>{{ currentBid }}</p>
+            <span><b>Highest Bid:</b> {{ currentBid }}</span>
+            <br>
+            <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
         {% else %}
-            <p>{{ attribute.initialBid }}</p>
+            <span><b>Highest Bid:</b> None</span>
+            <br>
+            <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
         {% endif %}
         <p>Owner: {{ attribute.user }}</p>
         <p>Category: {{ attribute.get_category_display }}</p>
     </div>
 </div>
-<form action="" method="post">
+<ul class="messages" style="list-style: none;">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+</ul>
+<form action="" method="POST">
+    {% csrf_token %}
     <label for="bidForm">Place a bid:</label>
     <input type="number" id="bidForm" name="bidForm" step="0.01">
     <input type="submit">

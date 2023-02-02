@@ -7,6 +7,7 @@ from .models import AuctionListings, User, Watchlist, Bids
 from django import forms
 from django.forms import ModelForm, TextInput, Textarea, NumberInput, Select
 from datetime import datetime
+from django.contrib import messages
 
 #class newListing(forms.Form):
     #listingImg = forms.ImageField(label="Image")
@@ -140,37 +141,75 @@ def listings_page(request, name):
     item = AuctionListings.objects.filter(itemTitle=name)
     watchlistStatus = Watchlist.objects.filter(itemTitle=name)
     currentBid = 0
-    if Bids.objects.filter(itemTitle=name):
-        # Django query that filters and orders by bid amount taking highest bid
-        highestBid = Bids.objects.filter(itemTitle=name).order_by('bid')
-        for bid in highestBid:
-            currentBid = bid.bid
-        return render(request, "auctions/listingPage.html", {
-            "item": item,
-            "watchlistStatus": watchlistStatus,
-            "currentBid": currentBid
-        })
+    if request.method == "POST":
+        # If user is not logged in redirect to login page
+        if request.user.is_authenticated:
+            activePrice=0
+            if Bids.objects.filter(itemTitle=name):
+                # Django query that filters and orders by bid amount taking highest bid
+                highestBid = Bids.objects.filter(itemTitle=name).order_by('bid')
+                for bid in highestBid:
+                    currentBid = bid.bid
+                    activePrice = bid.bid
+            else:
+                for bid in item:
+                    activePrice = bid.initialBid
+            bidRequest = request.POST["bidForm"]
+            if float(bidRequest) > activePrice:
+                for el in item:
+                    itemName = el.itemTitle
+                f = Bids(user=request.user, itemTitle=itemName, bid=bidRequest)
+                f.save()
+                currentBid = float(bidRequest)
+                print(currentBid)
+                #flash success message (maybe)
+                messages.add_message(request, messages.SUCCESS, 'Your bid has been submitted!')
+                print('success!')
+                return render(request, "auctions/listingPage.html", {
+                    "item": item,
+                    "watchlistStatus": watchlistStatus,
+                    "currentBid": currentBid
+                })
+            else:
+                #flash error message user
+                messages.add_message(request, messages.INFO, 'Your bid must be the hightest, please try again.')
+                print('Submission failed')
+                return render(request, "auctions/listingPage.html", {
+                    "item": item,
+                    "watchlistStatus": watchlistStatus,
+                    "currentBid": currentBid
+                })
+        else:
+            return render(request, "auctions/login.html")  
     else:
-        return render(request, "auctions/listingPage.html", {
-            "item": item,
-            "watchlistStatus": watchlistStatus,
-            "currentBid": currentBid
-        })
+        if Bids.objects.filter(itemTitle=name):
+            # Django query that filters and orders by bid amount taking highest bid
+            highestBid = Bids.objects.filter(itemTitle=name).order_by('bid')
+            for bid in highestBid:
+                currentBid = bid.bid
+            return render(request, "auctions/listingPage.html", {
+                "item": item,
+                "watchlistStatus": watchlistStatus,
+                "currentBid": currentBid
+            })
+        else:
+            return render(request, "auctions/listingPage.html", {
+                "item": item,
+                "watchlistStatus": watchlistStatus,
+                "currentBid": currentBid
+            })
 
 # This function handles the watchlist requests
 def watchlist_registry(request):
     if request.method == "POST":
-        # If user is not logged in redirect the login page
+        # If user is not logged in redirect to login page
         if request.user.is_authenticated:
             item = request.POST["title"]
             if Watchlist.objects.filter(itemTitle=item):
-                print('WL deleted')
                 itemDb = Watchlist.objects.get(itemTitle=item)
-                print(itemDb)
                 itemDb.delete()
                 return listings_page(request, item)
             else:
-                print('WL saved')
                 f = Watchlist(user=request.user, itemTitle=item)
                 f.save()
                 return listings_page(request, item)
