@@ -217,3 +217,24 @@ def watchlist_registry(request):
             return render(request, "auctions/login.html")
     else:
         return HttpResponseRedirect(reverse("index"))
+
+#This function handle end auctions requests
+def close_listing(request):
+    if request.method == "POST":
+        # Verify user is log in and is owner of listing
+        user = request.user
+        owner = request.POST["listingOwner"]
+        if request.user.is_authenticated and str(user) == owner:
+            item = request.POST["closeListing"]
+            try:
+                itemDb = AuctionListings.objects.get(itemTitle=item)
+                itemDb.isActive = False
+                itemDb.save()
+                messages.success(request, "Auction has been successfully closed.")
+            except:
+                messages.info(request, "Something went wrong...")
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "auctions/login.html")
+    else:
+        return HttpResponseRedirect(reverse("index"))

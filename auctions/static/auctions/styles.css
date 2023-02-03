@@ -11,11 +11,11 @@ body {
 }
 
 .info {
-    background-color: rgba(250, 0, 0, 0.5);
+    color: red;
 }
 
 .success {
-    background-color: rgba(0, 250, 0, 0.5);
+    color: green;
 }
 
 /*#newListingForm {

@@ -6,10 +6,10 @@
     <div class="mainImg">
         <img src="{{ attribute.listingImg }}" alt="Auction item image" style="max-width: 450px; height: auto;">
     </div>
-    <div class="info">
+    <div class="listingInfo">
         <h3>{{ attribute.itemTitle }}</h3>
         <!--Maybe use form for this-->
-        <form action="{% url 'watchlist' %}" method="post">
+        <form action="{% url 'watchlist' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
             <input type="submit" id="addWish" value="+ Add to wishlist" >   
@@ -35,6 +35,14 @@
         {% endif %}
         <p>Owner: {{ attribute.user }}</p>
         <p>Category: {{ attribute.get_category_display }}</p>
+        {% if user.is_authenticated and attribute.user == request.user %}
+            <form action="{% url 'close' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="listingOwner" name="listingOwner" value="{{ attribute.user }}">
+                <input type="hidden" id="closeListing" name="closeListing" value="{{ attribute.itemTitle }}">
+                <input type="submit" id="closeListingButton" value="Close Auction" onsubmit="return confirm('Are you sure you want to end this auction?');">
+            </form>
+        {% endif %}
     </div>
 </div>
 <ul class="messages" style="list-style: none;">
