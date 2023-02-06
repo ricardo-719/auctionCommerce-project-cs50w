@@ -9,21 +9,23 @@
     <div class="listingInfo">
         <h3>{{ attribute.itemTitle }}</h3>
         <!--Maybe use form for this-->
-        <form action="{% url 'watchlist' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
-            <input type="submit" id="addWish" value="+ Add to wishlist" >   
-            {% for item in watchlistStatus%}
-                {% if item.itemTitle == attribute.itemTitle %}
-                    <input type="submit" value="- Remove from wishlist" >
-                    <style>
-                        #addWish {
-                            display: none;
-                        }
-                    </style>
-                {% endif %}
-            {% endfor %}
-        </form>
+        {% if attribute.isActive %}
+            <form action="{% url 'watchlist' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
+                <input type="submit" id="addWish" value="+ Add to wishlist" >   
+                {% for item in watchlistStatus%}
+                    {% if item.itemTitle == attribute.itemTitle %}
+                        <input type="submit" value="- Remove from wishlist" >
+                        <style>
+                            #addWish {
+                                display: none;
+                            }
+                        </style>
+                    {% endif %}
+                {% endfor %}
+            </form>
+        {% endif %}
         {% if currentBid > attribute.initialBid %}
             <span><b>Highest Bid:</b> {{ currentBid }}</span>
             <br>
@@ -35,7 +37,7 @@
         {% endif %}
         <p>Owner: {{ attribute.user }}</p>
         <p>Category: {{ attribute.get_category_display }}</p>
-        {% if user.is_authenticated and attribute.user == request.user %}
+        {% if user.is_authenticated and attribute.user == request.user and attribute.isActive %}
             <form action="{% url 'close' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" id="listingOwner" name="listingOwner" value="{{ attribute.user }}">
@@ -50,12 +52,17 @@
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
 </ul>
-<form action="" method="POST">
-    {% csrf_token %}
-    <label for="bidForm">Place a bid:</label>
-    <input type="number" id="bidForm" name="bidForm" step="0.01">
-    <input type="submit">
-</form>
+{% if attribute.isActive %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="bidForm">Place a bid:</label>
+        <input type="number" id="bidForm" name="bidForm" step="0.01">
+        <input type="submit">
+    </form>
+{% else %}
+    <h3>This Auction Has Ended</h3>
+    <h4>The winner of this auction is {{ winnerUser }}</h4>
+{% endif %}
 <div class="itemDescription">
     <p><b>Date listed:</b> {{ attribute.date }}</p>
     <p>{{ attribute.itemDescription }}</p>

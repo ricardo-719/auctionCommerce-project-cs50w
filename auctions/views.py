@@ -187,16 +187,20 @@ def listings_page(request, name):
             highestBid = Bids.objects.filter(itemTitle=name).order_by('bid')
             for bid in highestBid:
                 currentBid = bid.bid
+                winnerUser = bid.user
             return render(request, "auctions/listingPage.html", {
                 "item": item,
                 "watchlistStatus": watchlistStatus,
-                "currentBid": currentBid
+                "currentBid": currentBid,
+                "winnerUser": winnerUser
             })
         else:
+            winnerUser = 'no one'
             return render(request, "auctions/listingPage.html", {
                 "item": item,
                 "watchlistStatus": watchlistStatus,
-                "currentBid": currentBid
+                "currentBid": currentBid,
+                "winnerUser": winnerUser
             })
 
 # This function handles the watchlist requests
@@ -208,11 +212,11 @@ def watchlist_registry(request):
             if Watchlist.objects.filter(itemTitle=item):
                 itemDb = Watchlist.objects.get(itemTitle=item)
                 itemDb.delete()
-                return listings_page(request, item)
+                return HttpResponseRedirect(item)
             else:
                 f = Watchlist(user=request.user, itemTitle=item)
                 f.save()
-                return listings_page(request, item)
+                return HttpResponseRedirect(item)
         else:
             return render(request, "auctions/login.html")
     else:
@@ -238,3 +242,12 @@ def close_listing(request):
             return render(request, "auctions/login.html")
     else:
         return HttpResponseRedirect(reverse("index"))
+
+# This function filters all closed listings
+# CREATE NEW INDEX CLONE PAGE FOR CLOSED LISTINGS; POTENTIALY ADD A FILTER OPTION BY LISTING BIDDED AND OWNED!!!
+def inactive_listing(request):
+    listing = AuctionListings.objects.filter(isActive=False)
+    return render(request, "auctions/index.html", {
+        "listing": listing,
+        "form": AuctionListingsForm()
+    })

@@ -11,13 +11,15 @@
 
     <ul>
         {% for item in listing %}
-            <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
-            <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
-            <p></p><i>{{ item.itemDescription }}</i></p>
-            {% if item.listingImg == "" %}
-            <img src="" alt="" hidden="true">
-            {% else %}
-            <img src="{{ item.listingImg }}" alt="Listing Image" style="max-width: 300px; height: auto;">
+            {% if item.isActive %}
+                <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
+                <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
+                <p></p><i>{{ item.itemDescription }}</i></p>
+                {% if item.listingImg == "" %}
+                <img src="" alt="" hidden="true">
+                {% else %}
+                <img src="{{ item.listingImg }}" alt="Listing Image" style="max-width: 300px; height: auto;">
+                {% endif %}
             {% endif %}
         {% endfor %}
     </ul>
