@@ -244,10 +244,18 @@ def close_listing(request):
         return HttpResponseRedirect(reverse("index"))
 
 # This function filters all closed listings
-# CREATE NEW INDEX CLONE PAGE FOR CLOSED LISTINGS; POTENTIALY ADD A FILTER OPTION BY LISTING BIDDED AND OWNED!!!
 def inactive_listing(request):
-    listing = AuctionListings.objects.filter(isActive=False)
-    return render(request, "auctions/index.html", {
-        "listing": listing,
-        "form": AuctionListingsForm()
-    })
+    listing = AuctionListings.objects.all()
+    # For the post method consider adding filter option by listing bidded and owned
+    if request.method == "POST":
+        queryCategory = request.POST["category"]
+        filteredListing = AuctionListings.objects.filter(category=queryCategory)
+        return render(request, "auctions/closedListing.html", {
+            "listing": filteredListing,
+            "form": AuctionListingsForm()
+        })
+    else:
+        return render(request, "auctions/closedListing.html", {
+            "listing": listing,
+            "form": AuctionListingsForm()
+        })

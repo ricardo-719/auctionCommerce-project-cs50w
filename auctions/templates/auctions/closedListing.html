@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}    
+    <form action="{% url 'index' %}" method="POST">
+        {% csrf_token %}
+        <label class="p-2" for="categoryFormId">Filter By Category: </label>
+        {{ form.category|safe }} 
+        <input type="submit" value="Filter" name="queryCategory">
+    </form>
+    <h2>Closed Listings</h2>
+
+    <ul>
+        {% for item in listing %}
+            {% if item.isActive == False %}
+                <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
+                <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
+                <p></p><i>{{ item.itemDescription }}</i></p>
+                {% if item.listingImg == "" %}
+                <img src="" alt="" hidden="true">
+                {% else %}
+                <img src="{{ item.listingImg }}" alt="Listing Image" style="max-width: 300px; height: auto;">
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}
