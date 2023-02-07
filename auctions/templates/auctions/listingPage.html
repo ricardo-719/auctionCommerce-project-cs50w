@@ -13,10 +13,10 @@
             <form action="{% url 'watchlist' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
-                <input type="submit" id="addWish" value="+ Add to wishlist" >   
+                <input type="submit" id="addWish" value="+ Add to wishlist" class="btn btn-success mt-2 ml-2">   
                 {% for item in watchlistStatus%}
                     {% if item.itemTitle == attribute.itemTitle %}
-                        <input type="submit" value="- Remove from wishlist" >
+                        <input type="submit" value="- Remove from wishlist" class="btn btn-danger mt-2 ml-2">
                         <style>
                             #addWish {
                                 display: none;
@@ -42,7 +42,8 @@
                 {% csrf_token %}
                 <input type="hidden" id="listingOwner" name="listingOwner" value="{{ attribute.user }}">
                 <input type="hidden" id="closeListing" name="closeListing" value="{{ attribute.itemTitle }}">
-                <input type="submit" id="closeListingButton" value="Close Auction" onsubmit="return confirm('Are you sure you want to end this auction?');">
+                <input type="submit" id="closeListingButton" value="Close Auction" 
+                class="btn btn-info mt-2 ml-2" onsubmit="return confirm('Are you sure you want to end this auction?');">
             </form>
         {% endif %}
     </div>
@@ -57,7 +58,7 @@
         {% csrf_token %}
         <label for="bidForm">Place a bid:</label>
         <input type="number" id="bidForm" name="bidForm" step="0.01">
-        <input type="submit">
+        <input type="submit" class="btn btn-info mt-2 ml-2">
     </form>
 {% else %}
     <h3>This Auction Has Ended</h3>
@@ -68,6 +69,13 @@
     <p>{{ attribute.itemDescription }}</p>
 </div>
 {% endfor %}
-<div class="comments"></div>
-
+<form action="{% url 'comment' %}" method="POST">
+    {% csrf_token %}
+    {{ form.comment|safe }} 
+    <input type="hidden" id="commentItemTitle" name="commentItemTitle" value="{{ attribute.itemTitle }}" >
+    <input class="btn btn-info mt-2 ml-2" type="submit" value="Post" name="commentBtn">
+</form>
+{% for comment in commentsFeed %}
+{{ comment.comment }}
+{% endfor %}
 {% endblock %}

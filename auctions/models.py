@@ -43,9 +43,11 @@ class Bids(models.Model):
     def __str__(self):
         return f"{ self.itemTitle } / Bid: { self.bid } / User: { self.user }"
 
-#class Comments(models.Model):
-    #user = models.CharField(max_length=64)
-    #comment = models.CharField(max_length=280)
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    itemTitle = models.CharField(max_length=80)
+    comment = models.CharField(max_length=280)
+    date = models.DateField()
 
-    #def __str__(self):
-        #return f"{ self.user } commented { self.comment }"
+    def __str__(self):
+        return f"{ self.user } commented { self.comment } in { self.itemTitle }"

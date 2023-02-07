@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import AuctionListings, User, Watchlist, Bids
+from .models import AuctionListings, User, Watchlist, Bids, Comments
 from django import forms
 from django.forms import ModelForm, TextInput, Textarea, NumberInput, Select
 from datetime import datetime
@@ -45,6 +45,19 @@ class AuctionListingsForm(ModelForm):
                 'style': 'max-width: 300px',
                 'placeholder': 'Image URL',
             })}
+class CommentsForm(ModelForm):
+    class Meta:
+        model = Comments
+        exclude = ['user', 'itemTitle', 'date']
+        widgets = {'comment':Textarea(attrs={
+            'class': "form-control",
+            'cols': 20,
+            'rows': 8,
+            'style': 'width: 50%',
+            'autocomplete': "off",
+            'placeholder': "Comment",
+            'label': 'Comment'
+        })}
 
 def index(request):
     listing = AuctionListings.objects.all()
@@ -140,6 +153,7 @@ def new_listings(request):
 def listings_page(request, name):
     item = AuctionListings.objects.filter(itemTitle=name)
     watchlistStatus = Watchlist.objects.filter(itemTitle=name)
+    commentsFeed = Comments.objects.filter(itemTitle=name)
     currentBid = 0
     if request.method == "POST":
         # If user is not logged in redirect to login page
@@ -168,7 +182,9 @@ def listings_page(request, name):
                 return render(request, "auctions/listingPage.html", {
                     "item": item,
                     "watchlistStatus": watchlistStatus,
-                    "currentBid": currentBid
+                    "commentsFeed": commentsFeed,
+                    "currentBid": currentBid,
+                    "form": CommentsForm()
                 })
             else:
                 #flash error message user
@@ -177,7 +193,9 @@ def listings_page(request, name):
                 return render(request, "auctions/listingPage.html", {
                     "item": item,
                     "watchlistStatus": watchlistStatus,
-                    "currentBid": currentBid
+                    "commentsFeed": commentsFeed,
+                    "currentBid": currentBid,
+                    "form": CommentsForm()
                 })
         else:
             return render(request, "auctions/login.html")  
@@ -191,16 +209,20 @@ def listings_page(request, name):
             return render(request, "auctions/listingPage.html", {
                 "item": item,
                 "watchlistStatus": watchlistStatus,
+                "commentsFeed": commentsFeed,
                 "currentBid": currentBid,
-                "winnerUser": winnerUser
+                "winnerUser": winnerUser,
+                "form": CommentsForm()
             })
         else:
             winnerUser = 'no one'
             return render(request, "auctions/listingPage.html", {
                 "item": item,
                 "watchlistStatus": watchlistStatus,
+                "commentsFeed": commentsFeed,
                 "currentBid": currentBid,
-                "winnerUser": winnerUser
+                "winnerUser": winnerUser,
+                "form": CommentsForm()
             })
 
 # This function handles the watchlist requests
@@ -259,3 +281,19 @@ def inactive_listing(request):
             "listing": listing,
             "form": AuctionListingsForm()
         })
+
+# This function handles comments
+def add_comment(request):
+    form = CommentsForm(request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            comment = request.POST["comment"]
+            commentItem = request.POST["commentItemTitle"]
+            print(commentItem)
+            f = Comments(user=request.user, itemTitle=commentItem, comment=comment, date=datetime.now().strftime("%Y-%m-%d"))
+            f.save()
+            return HttpResponseRedirect(item)
+        else:
+            return HttpResponseRedirect(item)
+    else:
+        return HttpResponseRedirect(reverse("index"))
