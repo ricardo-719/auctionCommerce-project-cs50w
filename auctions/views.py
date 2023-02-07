@@ -289,11 +289,10 @@ def add_comment(request):
         if form.is_valid():
             comment = request.POST["comment"]
             commentItem = request.POST["commentItemTitle"]
-            print(commentItem)
             f = Comments(user=request.user, itemTitle=commentItem, comment=comment, date=datetime.now().strftime("%Y-%m-%d"))
             f.save()
-            return HttpResponseRedirect(item)
+            return HttpResponseRedirect(commentItem)
         else:
-            return HttpResponseRedirect(item)
+            return HttpResponseRedirect(commentItem)
     else:
         return HttpResponseRedirect(reverse("index"))

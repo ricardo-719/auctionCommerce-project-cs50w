@@ -2,80 +2,82 @@
 
 {% block body %}
 {% for attribute in item %}
-<div id="itemGeneralInfo">
-    <div class="mainImg">
-        <img src="{{ attribute.listingImg }}" alt="Auction item image" style="max-width: 450px; height: auto;">
+    <div id="itemGeneralInfo">
+        <div class="mainImg">
+            <img src="{{ attribute.listingImg }}" alt="Auction item image" style="max-width: 450px; height: auto;">
+        </div>
+        <div class="listingInfo">
+            <h3>{{ attribute.itemTitle }}</h3>
+            <!--Maybe use form for this-->
+            {% if attribute.isActive %}
+                <form action="{% url 'watchlist' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
+                    <input type="submit" id="addWish" value="+ Add to wishlist" class="btn btn-success mt-2 ml-2">   
+                    {% for item in watchlistStatus%}
+                        {% if item.itemTitle == attribute.itemTitle %}
+                            <input type="submit" value="- Remove from wishlist" class="btn btn-danger mt-2 ml-2">
+                            <style>
+                                #addWish {
+                                    display: none;
+                                }
+                            </style>
+                        {% endif %}
+                    {% endfor %}
+                </form>
+            {% endif %}
+            {% if currentBid > attribute.initialBid %}
+                <span><b>Highest Bid:</b> {{ currentBid }}</span>
+                <br>
+                <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
+            {% else %}
+                <span><b>Highest Bid:</b> None</span>
+                <br>
+                <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
+            {% endif %}
+            <p>Owner: {{ attribute.user }}</p>
+            <p>Category: {{ attribute.get_category_display }}</p>
+            {% if user.is_authenticated and attribute.user == request.user and attribute.isActive %}
+                <form action="{% url 'close' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="listingOwner" name="listingOwner" value="{{ attribute.user }}">
+                    <input type="hidden" id="closeListing" name="closeListing" value="{{ attribute.itemTitle }}">
+                    <input type="submit" id="closeListingButton" value="Close Auction" 
+                    class="btn btn-info mt-2 ml-2" onsubmit="return confirm('Are you sure you want to end this auction?');">
+                </form>
+            {% endif %}
+        </div>
     </div>
-    <div class="listingInfo">
-        <h3>{{ attribute.itemTitle }}</h3>
-        <!--Maybe use form for this-->
-        {% if attribute.isActive %}
-            <form action="{% url 'watchlist' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" id="title" name="title" value="{{ attribute.itemTitle }}">
-                <input type="submit" id="addWish" value="+ Add to wishlist" class="btn btn-success mt-2 ml-2">   
-                {% for item in watchlistStatus%}
-                    {% if item.itemTitle == attribute.itemTitle %}
-                        <input type="submit" value="- Remove from wishlist" class="btn btn-danger mt-2 ml-2">
-                        <style>
-                            #addWish {
-                                display: none;
-                            }
-                        </style>
-                    {% endif %}
-                {% endfor %}
-            </form>
-        {% endif %}
-        {% if currentBid > attribute.initialBid %}
-            <span><b>Highest Bid:</b> {{ currentBid }}</span>
-            <br>
-            <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
-        {% else %}
-            <span><b>Highest Bid:</b> None</span>
-            <br>
-            <span><b>Initial Price:</b> {{ attribute.initialBid }}</span>
-        {% endif %}
-        <p>Owner: {{ attribute.user }}</p>
-        <p>Category: {{ attribute.get_category_display }}</p>
-        {% if user.is_authenticated and attribute.user == request.user and attribute.isActive %}
-            <form action="{% url 'close' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" id="listingOwner" name="listingOwner" value="{{ attribute.user }}">
-                <input type="hidden" id="closeListing" name="closeListing" value="{{ attribute.itemTitle }}">
-                <input type="submit" id="closeListingButton" value="Close Auction" 
-                class="btn btn-info mt-2 ml-2" onsubmit="return confirm('Are you sure you want to end this auction?');">
-            </form>
-        {% endif %}
+    <ul class="messages" style="list-style: none;">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+    </ul>
+    {% if attribute.isActive %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <label for="bidForm">Place a bid:</label>
+            <input type="number" id="bidForm" name="bidForm" step="0.01">
+            <input type="submit" class="btn btn-info mt-2 ml-2">
+        </form>
+    {% else %}
+        <h3>This Auction Has Ended</h3>
+        <h4>The winner of this auction is {{ winnerUser }}</h4>
+    {% endif %}
+    <div class="itemDescription">
+        <p><b>Date listed:</b> {{ attribute.date }}</p>
+        <p>{{ attribute.itemDescription }}</p>
     </div>
-</div>
-<ul class="messages" style="list-style: none;">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-</ul>
-{% if attribute.isActive %}
-    <form action="" method="POST">
+    <form action="{% url 'comment' %}" method="POST">
         {% csrf_token %}
-        <label for="bidForm">Place a bid:</label>
-        <input type="number" id="bidForm" name="bidForm" step="0.01">
-        <input type="submit" class="btn btn-info mt-2 ml-2">
+        {{ form.comment|safe }} 
+        <input type="hidden" id="commentItemTitle" name="commentItemTitle" value="{{ attribute.itemTitle }}" >
+        <input type="submit" class="btn btn-info mt-2 ml-2" value="Post" name="commentBtn">
     </form>
-{% else %}
-    <h3>This Auction Has Ended</h3>
-    <h4>The winner of this auction is {{ winnerUser }}</h4>
-{% endif %}
-<div class="itemDescription">
-    <p><b>Date listed:</b> {{ attribute.date }}</p>
-    <p>{{ attribute.itemDescription }}</p>
-</div>
 {% endfor %}
-<form action="{% url 'comment' %}" method="POST">
-    {% csrf_token %}
-    {{ form.comment|safe }} 
-    <input type="hidden" id="commentItemTitle" name="commentItemTitle" value="{{ attribute.itemTitle }}" >
-    <input class="btn btn-info mt-2 ml-2" type="submit" value="Post" name="commentBtn">
-</form>
 {% for comment in commentsFeed %}
-{{ comment.comment }}
+    <p>{{ comment.user }}</p>
+    <li>{{ comment.comment }}</li>
+    <P>{{ comment.date }}</P>
 {% endfor %}
 {% endblock %}
