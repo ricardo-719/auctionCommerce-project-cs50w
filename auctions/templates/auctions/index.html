@@ -9,28 +9,25 @@
     </form>
     <h2>Active Listings</h2>
 
-    <ul>
+    <ul class="flex flex-col p-2 ml-2">
         {% for item in listing %}
             {% if item.isActive %}
-                <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
-                <!-- {% for bid in bids %}
-                    {% if bid.bid > item.initialBid and bid.itemTitle == item.itemTitle %}
-                        <span><b>Highest Bid:</b> {{ bid.bid }}</span>
-                        <br>
-                        <span><b>Initial Price:</b> {{ item.initialBid }}</span>
+            <a class="hover:no-underline hover:text-inherit hover:opacity-75" href="{{ item.itemTitle }}">
+                <div class="flex flex-col md:flex-row md:max-w-xl rounded-lg bg-grey shadow-lg p-2">
+                    {% if item.listingImg == "" %}
+                    <img src="" alt="" hidden="true">
                     {% else %}
-                        <span><b>Highest Bid:</b> None</span>
-                        <br>
-                        <span><b>Initial Price:</b> {{ item.initialBid }}</span>
+                    <img src="{{ item.listingImg }}" alt="Listing Image" 
+                    class=" w-full max-w-xs h-96 md:h-auto object-cover md:w-48 rounded-t-lg md:rounded-none md:rounded-l-lg">
                     {% endif %}
-                {% endfor %} -->
-                <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
-                <p></p><i>{{ item.itemDescription }}</i></p>
-                {% if item.listingImg == "" %}
-                <img src="" alt="" hidden="true">
-                {% else %}
-                <img src="{{ item.listingImg }}" alt="Listing Image" style="max-width: 300px; height: auto;">
-                {% endif %}
+                    <div class="p-6 flex flex-col justify-start">
+                        <li><h2 class="text-gray-900 text-xl font-medium mb-2">{{ item.itemTitle }}</h2></li>
+                        <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
+                        <p class="text-gray-700 text-base mb-4"><i>{{ item.itemDescription }}</i></p>
+                        <p class="text-gray-600 text-xs">{{ item.date }}</p>
+                    </div>
+                </div>
+            </a>
             {% endif %}
         {% endfor %}
     </ul>

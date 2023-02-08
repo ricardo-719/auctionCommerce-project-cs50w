@@ -1,5 +1,6 @@
 body {
     padding: 10px;
+    background-color: #DEE4E7;
 }
 
 #itemGeneralInfo {
@@ -17,7 +18,3 @@ body {
 .success {
     color: green;
 }
-
-/*#newListingForm {
-    margin-left: 3%;
-}*/
