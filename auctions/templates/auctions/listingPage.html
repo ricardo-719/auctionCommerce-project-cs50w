@@ -79,5 +79,14 @@
     <p>{{ comment.user }}</p>
     <li>{{ comment.comment }}</li>
     <P>{{ comment.date }}</P>
+    {% if user.is_authenticated and comment.user == request.user %}
+        <form action="{% url 'delComment' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="delete" name="deleteComment" id="deleteComment">
+            <input type="hidden" value="{{ comment.id }}" id="idComment" name="idComment">
+            <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
+            <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
+        </form>
+    {% endif %}
 {% endfor %}
 {% endblock %}

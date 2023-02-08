@@ -61,16 +61,19 @@ class CommentsForm(ModelForm):
 
 def index(request):
     listing = AuctionListings.objects.all()
+    bids = Bids.objects.all().order_by('-bid')
     if request.method == "POST":
         queryCategory = request.POST["category"]
         filteredListing = AuctionListings.objects.filter(category=queryCategory)
         return render(request, "auctions/index.html", {
             "listing": filteredListing,
+            "bids": bids,
             "form": AuctionListingsForm()
         })
     else:
         return render(request, "auctions/index.html", {
             "listing": listing,
+            "bids": bids,
             "form": AuctionListingsForm()
         })
 
@@ -294,5 +297,18 @@ def add_comment(request):
             return HttpResponseRedirect(commentItem)
         else:
             return HttpResponseRedirect(commentItem)
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+def delete_comment(request):
+    if request.method == "POST":
+        item = request.POST["itemComment"]
+        user = request.user
+        userComment = request.POST["userComment"]   
+        idComment = request.POST["idComment"]
+        if userComment == str(user):
+            commentToDelete = Comments.objects.get(id=idComment)
+            commentToDelete.delete()
+        return HttpResponseRedirect(item)
     else:
         return HttpResponseRedirect(reverse("index"))

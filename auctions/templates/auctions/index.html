@@ -13,6 +13,17 @@
         {% for item in listing %}
             {% if item.isActive %}
                 <li><h2><a href="{{ item.itemTitle }}">{{ item.itemTitle }}</a></h2></li>
+                <!-- {% for bid in bids %}
+                    {% if bid.bid > item.initialBid and bid.itemTitle == item.itemTitle %}
+                        <span><b>Highest Bid:</b> {{ bid.bid }}</span>
+                        <br>
+                        <span><b>Initial Price:</b> {{ item.initialBid }}</span>
+                    {% else %}
+                        <span><b>Highest Bid:</b> None</span>
+                        <br>
+                        <span><b>Initial Price:</b> {{ item.initialBid }}</span>
+                    {% endif %}
+                {% endfor %} -->
                 <p>Initial Price: USD$<b><i>{{ item.initialBid }}</i></b></p>
                 <p></p><i>{{ item.itemDescription }}</i></p>
                 {% if item.listingImg == "" %}
