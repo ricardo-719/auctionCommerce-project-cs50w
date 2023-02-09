@@ -7,47 +7,55 @@
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Vollkorn:ital@0;1&display=swap" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <div class="collapse navbar-collapse flex-grow items-center g-2" id="navbarSupportedContent"></div>
-            <ul class="relative w-1/2 flex flex-wrap items-center justify-between py-4 bg-gray-100 text-gray-500 
-            hover:text-gray-700 focus:text-gray-700 shadow-lg navbar navbar-expand-lg navbar-light">
-                <li class="nav-item pr-2">
-                    <a class="nav-link text-gray-500 hover:text-gray-700 
-                    focus:text-gray-700 p-0" href="{% url 'index' %}">Active Listings</a>
-                </li>
-                <li class="nav-item pr-2">
-                    <a class="nav-link text-gray-500 hover:text-gray-700 
-                    focus:text-gray-700 p-0" href="{% url 'newListing' %}">Create New Auction</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item pr-2">
-                        <a class="nav-link text-gray-500 hover:text-gray-700 
-                        focus:text-gray-700 p-0" href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                    <li class="nav-item pr-2">
-                        <a href="{% url 'inactive' %}">Closed Listings</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item pr-2">
-                        <a class="nav-link text-gray-500 hover:text-gray-700 
-                        focus:text-gray-700 p-0" href="{% url 'login' %}">Log In</a>
-                    </li>
-                    <li class="nav-item pr-2">
-                        <a class="nav-link text-gray-500 hover:text-gray-700 
-                        focus:text-gray-700 p-0" href="{% url 'register' %}">Register</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+        <header>
+            <img src="https://escrituras-eremitas.com/wp-content/uploads/2023/02/ChessLogoAuctionTrans.png" alt="ChessHub Logo">
+            <div class="navSection">
+                <div>
+                    {% if user.is_authenticated %}
+                        Signed in as <strong>{{ user.username }}</strong>.
+                    {% else %}
+                        Not signed in.
+                    {% endif %}
+                </div>
+                <div class="collapse navbar-collapse flex-grow items-center g-2" id="navbarSupportedContent"></div>
+                    <ul class="relative max-w-2xl flex flex-wrap items-center justify-between py-4 bg-gray-100 text-gray-500 
+                    hover:text-gray-700 focus:text-gray-700 shadow-lg navbar navbar-expand-lg navbar-light">
+                        <li class="nav-item pr-2">
+                            <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                            focus:text-gray-700 p-2" href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        <li class="nav-item pr-2">
+                            <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                            focus:text-gray-700 p-2" href="{% url 'newListing' %}">New Auction</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item pr-2">
+                                <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                                focus:text-gray-700 p-2" href="{% url 'logout' %}">Log Out</a>
+                            </li>
+                            <li class="nav-item pr-2">
+                                <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                                focus:text-gray-700 p-2" href="{% url 'inactive' %}">Closed Listings</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item pr-2">
+                                <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                                focus:text-gray-700 p-2" href="{% url 'login' %}">Log In</a>
+                            </li>
+                            <li class="nav-item pr-2">
+                                <a class="nav-link text-xl text-gray-500 hover:text-gray-700 
+                                focus:text-gray-700 p-2" href="{% url 'register' %}">Register</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </header>    
         {% block body %}
         {% endblock %}
     </body>
