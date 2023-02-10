@@ -100,7 +100,7 @@
             <div class="bg-gray-100 m-2 border px-5 py-2">
                 <p class="font-medium py-1">{{ comment.user }}</p>
                 <li class="list-none text-base mb-2">{{ comment.comment }}</li>
-                <P class="text-gray-600 text-xs py-2">{{ comment.date }}</P>
+                <p class="text-gray-600 text-xs py-2">{{ comment.date }}</p>
         {% if user.is_authenticated and comment.user == request.user %}
                 <form action="{% url 'delComment' %}" method="POST">
                     {% csrf_token %}
@@ -110,8 +110,8 @@
                     <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
                     <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
                 </form>
-            </div>
         {% endif %}
+            </div>
     {% endfor %}
         </section>
     </div>
