@@ -290,26 +290,30 @@ def inactive_listing(request):
 def add_comment(request):
     form = CommentsForm(request.POST)
     if request.method == "POST":
-        if form.is_valid():
+        commentItem = request.POST["commentItemTitle"]
+        if form.is_valid() and request.user.is_authenticated:
             comment = request.POST["comment"]
-            commentItem = request.POST["commentItemTitle"]
             f = Comments(user=request.user, itemTitle=commentItem, comment=comment, date=datetime.now().strftime("%Y-%m-%d"))
             f.save()
             return HttpResponseRedirect(commentItem)
         else:
-            return HttpResponseRedirect(commentItem)
+            return render(request, "auctions/login.html")
     else:
         return HttpResponseRedirect(reverse("index"))
 
 def delete_comment(request):
     if request.method == "POST":
-        item = request.POST["itemComment"]
         user = request.user
-        userComment = request.POST["userComment"]   
-        idComment = request.POST["idComment"]
-        if userComment == str(user):
-            commentToDelete = Comments.objects.get(id=idComment)
-            commentToDelete.delete()
-        return HttpResponseRedirect(item)
+        userComment = request.POST["userComment"]
+        if request.user.is_authenticated:
+            if userComment == str(user):
+                item = request.POST["itemComment"]  
+                idComment = request.POST["idComment"]
+                commentToDelete = Comments.objects.get(id=idComment)
+                commentToDelete.delete()
+            return HttpResponseRedirect(item)
+        else:
+            return render(request, "auctions/login.html")
+
     else:
         return HttpResponseRedirect(reverse("index"))

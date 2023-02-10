@@ -97,17 +97,20 @@
             </form>
     {% endfor %}
     {% for comment in commentsFeed %}
-            <p>User: {{ comment.user }}</p>
-            <li class="list-none">{{ comment.comment }}</li>
-            <P>{{ comment.date }}</P>
+            <div class="bg-gray-100 m-2 border px-5 py-2">
+                <p class="font-medium py-1">{{ comment.user }}</p>
+                <li class="list-none text-base mb-2">{{ comment.comment }}</li>
+                <P class="text-gray-600 text-xs py-2">{{ comment.date }}</P>
         {% if user.is_authenticated and comment.user == request.user %}
-            <form action="{% url 'delComment' %}" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="delete" name="deleteComment" id="deleteComment">
-                <input type="hidden" value="{{ comment.id }}" id="idComment" name="idComment">
-                <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
-                <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
-            </form>
+                <form action="{% url 'delComment' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="text-blue-500 text-xs cursor-pointer hover:text-blue-400" 
+                    type="submit" value="delete" name="deleteComment" id="deleteComment">
+                    <input type="hidden" value="{{ comment.id }}" id="idComment" name="idComment">
+                    <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
+                    <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
+                </form>
+            </div>
         {% endif %}
     {% endfor %}
         </section>
