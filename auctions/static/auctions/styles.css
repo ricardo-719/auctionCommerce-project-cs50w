@@ -33,12 +33,34 @@ h2 {
     align-items: center;
 }
 
-#itemGeneralInfo {
+#listingPageContainer {
     display: flex;
+    flex-direction: column;
+    margin: 1rem auto 0.5rem;
+    width: fit-content;
 }
 
-#bidForm {
-    display: block;
+#itemGeneralInfo {
+    display: flex;
+    padding: 0.3rem;
+}
+
+.listingInfo {
+    margin-left: 2%;
+}
+
+#biddingSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.itemDescription {
+    margin: 0.4rem 0;
+}
+
+#commentSection {
+    display: flex;
+    flex-direction: column;
 }
 
 .info {
@@ -47,4 +69,10 @@ h2 {
 
 .success {
     color: green;
+}
+
+@media only screen and (max-width: 780px) {
+    #itemGeneralInfo {
+        flex-direction: column;
+    }
 }

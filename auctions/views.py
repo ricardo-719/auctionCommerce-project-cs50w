@@ -50,9 +50,10 @@ class CommentsForm(ModelForm):
         model = Comments
         exclude = ['user', 'itemTitle', 'date']
         widgets = {'comment':Textarea(attrs={
-            'class': "form-control",
+            'class': "form-control block px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
+            'id': 'idCommentListing',
             'cols': 20,
-            'rows': 8,
+            'rows': 5,
             'style': 'width: 50%',
             'autocomplete': "off",
             'placeholder': "Comment",

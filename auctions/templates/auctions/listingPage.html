@@ -1,14 +1,14 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-{% for attribute in item %}
-    <div id="itemGeneralInfo">
-        <div class="mainImg">
-            <img src="{{ attribute.listingImg }}" alt="Auction item image" style="max-width: 450px; height: auto;">
-        </div>
-        <div class="listingInfo p-4">
-            <h3 class="font-medium leading-tight text-3xl p-1">{{ attribute.itemTitle }}</h3>
-            <!--Maybe use form for this-->
+    <div id="listingPageContainer">
+    {% for attribute in item %}
+        <section id="itemGeneralInfo">
+            <div class="mainImg max-w-full m-2">
+                <img class="border rounded max-w-full p-1" src="{{ attribute.listingImg }}" alt="Auction item image" style="max-width: 35rem; height: auto;">
+            </div>
+            <div class="listingInfo p-3">
+                <h3 class="font-medium leading-tight text-3xl p-1">{{ attribute.itemTitle }}</h3>
             {% if attribute.isActive %}
                 <form action="{% url 'watchlist' %}" method="POST">
                     {% csrf_token %}
@@ -41,8 +41,8 @@
                 <br>
                 <span class="p-1"><b>Initial Price:</b> {{ attribute.initialBid }}</span>
             {% endif %}
-            <p><b>Owner:</b> {{ attribute.user }}</p>
-            <p><b>Category:</b> {{ attribute.get_category_display }}</p>
+                <p><b>Owner:</b> {{ attribute.user }}</p>
+                <p><b>Category:</b> {{ attribute.get_category_display }}</p>
             {% if user.is_authenticated and attribute.user == request.user and attribute.isActive %}
                 <form action="{% url 'close' %}" method="POST">
                     {% csrf_token %}
@@ -55,50 +55,61 @@
                     onsubmit="return confirm('Are you sure you want to end this auction?');">
                 </form>
             {% endif %}
-        </div>
+            </div>
+        </section>
+        <section id="biddingSection">
+            <ul class="messages" style="list-style: none;">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+            </ul>
+        {% if attribute.isActive %}
+            <form class="float-left" action="" method="POST">
+                {% csrf_token %}
+                <label for="bidForm" class="">Place a bid:</label>
+                <input type="number" class="form-control block px-3 py-1.5 text-base font-normal text-gray-700 
+                bg-white bg-clip-padding border border-solid border-gray-300 rounded transitionease-in-out m-1 
+                focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+                id="bidForm" name="bidForm" step="0.01" placeholder="Bid">
+                <input type="submit" class="inline-block px-6 py-2.5 bg-blue-400 text-white font-medium text-xs leading-tight uppercase 
+                rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg focus:outline-none 
+                focus:ring-0 active:bg-blue-600 active:shadow-lg transition duration-150 ease-in-out">
+            </form>
+        {% else %}
+            <h3>This Auction Has Ended</h3>
+            <h4>The winner of this auction is {{ winnerUser }}</h4>
+        {% endif %}
+            <div class="itemDescription block">
+                <p><b>Date listed:</b> {{ attribute.date }}</p>
+                <p><i>{{ attribute.itemDescription }}</i></p>
+            </div>
+        </section>
+        <section class="commentSection">
+            <form action="{% url 'comment' %}" method="POST">
+                {% csrf_token %}
+                <label for="idCommentListing" class="p-1">Comment:</label>
+                {{ form.comment|safe }} 
+                <input type="hidden" id="commentItemTitle" name="commentItemTitle" value="{{ attribute.itemTitle }}" >
+                <input type="submit" class="inline-block px-6 py-2.5 bg-blue-400 text-white font-medium text-xs leading-tight uppercase 
+                rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg focus:outline-none 
+                focus:ring-0 active:bg-blue-600 active:shadow-lg transition duration-150 ease-in-out mt-1" 
+                value="Post" name="commentBtn">
+            </form>
+    {% endfor %}
+    {% for comment in commentsFeed %}
+            <p>User: {{ comment.user }}</p>
+            <li class="list-none">{{ comment.comment }}</li>
+            <P>{{ comment.date }}</P>
+        {% if user.is_authenticated and comment.user == request.user %}
+            <form action="{% url 'delComment' %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="delete" name="deleteComment" id="deleteComment">
+                <input type="hidden" value="{{ comment.id }}" id="idComment" name="idComment">
+                <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
+                <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
+            </form>
+        {% endif %}
+    {% endfor %}
+        </section>
     </div>
-    <ul class="messages" style="list-style: none;">
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-    </ul>
-    {% if attribute.isActive %}
-        <form action="" method="POST">
-            {% csrf_token %}
-            <label for="bidForm" class="">Place a bid:</label>
-            <input type="number" id="bidForm" name="bidForm" step="0.01" 
-            class="form-control block w-1/4 px-3 py-1.5 text-base font-normal text-gray-700
-            bg-white bg-clip-padding border border-solid border-black rounded transition
-            ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-            <input type="submit" class="btn btn-info mt-2 ml-2">
-        </form>
-    {% else %}
-        <h3>This Auction Has Ended</h3>
-        <h4>The winner of this auction is {{ winnerUser }}</h4>
-    {% endif %}
-    <div class="itemDescription">
-        <p><b>Date listed:</b> {{ attribute.date }}</p>
-        <p>{{ attribute.itemDescription }}</p>
-    </div>
-    <form action="{% url 'comment' %}" method="POST">
-        {% csrf_token %}
-        {{ form.comment|safe }} 
-        <input type="hidden" id="commentItemTitle" name="commentItemTitle" value="{{ attribute.itemTitle }}" >
-        <input type="submit" class="btn btn-info mt-2 ml-2" value="Post" name="commentBtn">
-    </form>
-{% endfor %}
-{% for comment in commentsFeed %}
-    <p>{{ comment.user }}</p>
-    <li>{{ comment.comment }}</li>
-    <P>{{ comment.date }}</P>
-    {% if user.is_authenticated and comment.user == request.user %}
-        <form action="{% url 'delComment' %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="delete" name="deleteComment" id="deleteComment">
-            <input type="hidden" value="{{ comment.id }}" id="idComment" name="idComment">
-            <input type="hidden" value="{{ comment.user }}" id="userComment" name="userComment">
-            <input type="hidden" value="{{ comment.itemTitle }}" id="itemComment" name="itemComment">
-        </form>
-    {% endif %}
-{% endfor %}
 {% endblock %}
