@@ -272,7 +272,6 @@ def close_listing(request):
 # This function filters all closed listings
 def inactive_listing(request):
     listing = AuctionListings.objects.all()
-    # For the post method consider adding filter option by listing bidded and owned
     if request.method == "POST":
         queryCategory = request.POST["category"]
         filteredListing = AuctionListings.objects.filter(category=queryCategory)

@@ -6,13 +6,14 @@ class User(AbstractUser):
 
 class AuctionListings(models.Model):
     LISTING_CATEGORIES = [
-        ('OTH', 'Other'),
-        ('HOM', 'Home'),
-        ('FAS', 'Fashion'),
-        ('TOY', 'Toys'),
-        ('ELE', 'Electronics'),
-        ('BAB', 'Baby'),
-        ('AUT', 'Automotive'),
+        ('STD', 'Standard'),
+        ('CLS', 'Classic'),
+        ('MDN', 'Modern'),
+        ('ELE', 'Electronic'),
+        ('TVL', 'Travel'),
+        ('LUX', 'Luxury'),
+        ('ATQ', 'Antique'),
+        ('OTH', 'Other')
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemTitle = models.CharField(max_length=80)
