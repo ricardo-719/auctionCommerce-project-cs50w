@@ -16,13 +16,13 @@ class AuctionListingsForm(ModelForm):
         model = AuctionListings
         exclude = ['user', 'isActive', 'date']
         widgets = {'itemTitle': TextInput(attrs={
-                'class': "form-control",
-                'style': 'max-width: 300px',
+                'class': "form-control px-2 py-1.5 text-gray-700 border border-solid border-gray-300 rounded transition ease-in-out m-1 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
+                'style': 'max-width: 20rem',
                 'placeholder': 'Title',
-                'label': 'Title'
+                'id': 'itemTitleForm'
             }),
             'itemDescription': Textarea(attrs={
-               'class': "form-control",
+               'class': "form-control px-2 py-1.5 text-gray-700 border border-solid border-gray-300 rounded transition ease-in-out m-1 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
                 'cols': 40,
                 'rows': 15,
                 'style': 'width: 75%',
@@ -31,7 +31,7 @@ class AuctionListingsForm(ModelForm):
                 'label': 'Description' 
             }),
             'initialBid': NumberInput(attrs={
-                'class': "form-control",
+                'class': "form-control px-2 py-1.5 text-gray-700 border border-solid border-gray-300 rounded transition ease-in-out m-1 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
                 'style': 'max-width: 150px',
                 'placeholder': 'USD'
             }),
@@ -41,7 +41,7 @@ class AuctionListingsForm(ModelForm):
                 'id': 'categoryFormId'
             }),
             'listingImg': TextInput(attrs={
-                'class': "form-control",
+                'class': "form-control px-2 py-1.5 text-gray-700 border border-solid border-gray-300 rounded transition ease-in-out m-1 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",
                 'style': 'max-width: 300px',
                 'placeholder': 'Image URL',
             })}

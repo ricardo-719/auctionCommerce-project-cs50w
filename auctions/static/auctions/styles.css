@@ -71,6 +71,13 @@ h2 {
     color: green;
 }
 
+#newListingFormContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto 0;
+}
+
 @media only screen and (max-width: 780px) {
     #itemGeneralInfo {
         flex-direction: column;

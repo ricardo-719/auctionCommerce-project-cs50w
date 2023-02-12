@@ -1,29 +1,27 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
-<h1>List New Auction</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    <div id="newListingForm" class="formContainer">
-        <!--input class="form-control w-75 mb-1 ml-2" autocomplete="off" autofocus type="text" name="auctionTitle" placeholder="Auction Title">
-        <textarea class="form-control w-75 mb-1 ml-2" type="text" name="auctionDescription" rows="15" wrap="soft" 
-        maxlength="10000" class="form-control" autocomplete="off" 
-        placeholder="Auction Description"></textarea>
-        <input class="form-control w-25 mb-1 ml-2" autocomplete="off" autofocus type="number" step=".01" name="startingBid" placeholder="Starting Bid (USD)"-->
-        <span class="p-2">Auction Title: </span>
-        {{ form.itemTitle|safe }}
-        <span class="p-2">Auction Description: </span>
-        {{ form.itemDescription|safe }}
-        <br>
-        <span class="p-2">Initial Bid: </span>
-        {{ form.initialBid|safe }}
-        <span class="p-2">Category: </span>
-        {{ form.category|safe }}
-        <span class="p-2">Upload Image: </span>
-        {{ form.listingImg|safe }}
-    </div>
-    <input class="btn btn-info mt-2 ml-2" type="submit" value="Post" name="listBtn">
-</form>
-
+<section id="newListingFormContainer">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div id="newListingForm" class="formContainer">
+            <h2>List New Auction</h2>
+            <label for="itemTitleForm" class="p-2 inline-block font-medium">Auction Title:</label>
+            {{ form.itemTitle|safe }}
+            <span class="p-2 block">Auction Description: </span>
+            {{ form.itemDescription|safe }}
+            <br>
+            <span class="p-2">Initial Bid: </span>
+            {{ form.initialBid|safe }}
+            <span class="p-2">Category: </span>
+            {{ form.category|safe }}
+            <span class="p-2">Upload Image: </span>
+            {{ form.listingImg|safe }}
+        </div>
+        <input class="inline-block px-6 py-2.5 bg-blue-400 text-white font-medium text-xs leading-tight uppercase 
+        rounded shadow-md hover:bg-blue-500 hover:shadow-lg focus:bg-blue-500 focus:shadow-lg focus:outline-none 
+        focus:ring-0 active:bg-blue-600 active:shadow-lg transition duration-150 ease-in-out mt-1"
+        type="submit" value="Post" name="listBtn">
+    </form>
+</section>
 {% endblock %}
