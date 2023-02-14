@@ -9,8 +9,6 @@ from django.forms import ModelForm, TextInput, Textarea, NumberInput, Select
 from datetime import datetime
 from django.contrib import messages
 
-#class newListing(forms.Form):
-    #listingImg = forms.ImageField(label="Image")
 class AuctionListingsForm(ModelForm):
     class Meta:
         model = AuctionListings
@@ -130,7 +128,6 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def new_listings(request):
-    #listing = AuctionListings.objects.all()
     form = AuctionListingsForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -139,13 +136,6 @@ def new_listings(request):
             bid = request.POST["initialBid"]
             category = request.POST["category"]
             imgUrl = request.POST["listingImg"]
-            print(request.user)
-            print(title)
-            print(description)
-            print(bid)
-            print(category)
-            print(imgUrl)
-            print(datetime.now().strftime("%Y/%m/%d, %H:%M"))
             f = AuctionListings(user=request.user, itemTitle=title, itemDescription=description, initialBid=bid, listingImg=imgUrl, category=category, date=datetime.now().strftime("%Y-%m-%d"))
             f.save()
         return HttpResponseRedirect(reverse("index"))
@@ -180,7 +170,7 @@ def listings_page(request, name):
                 f.save()
                 currentBid = float(bidRequest)
                 print(currentBid)
-                #flash success message (maybe)
+                # Flash success message (maybe)
                 messages.add_message(request, messages.SUCCESS, 'Your bid has been submitted!')
                 print('success!')
                 return render(request, "auctions/listingPage.html", {
@@ -191,7 +181,7 @@ def listings_page(request, name):
                     "form": CommentsForm()
                 })
             else:
-                #flash error message user
+                # Flash error message user
                 messages.add_message(request, messages.INFO, 'Your bid must be the hightest, please try again.')
                 print('Submission failed')
                 return render(request, "auctions/listingPage.html", {
