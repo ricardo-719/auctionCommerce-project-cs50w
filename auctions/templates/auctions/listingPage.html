@@ -18,7 +18,7 @@
                     uppercase rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg 
                     focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">   
                     {% for item in watchlistStatus%}
-                        {% if item.itemTitle == attribute.itemTitle %}
+                        {% if item.itemTitle == attribute.itemTitle and item.user == request.user %}
                             <input type="submit" value="- Remove from wishlist" 
                             class="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded-full 
                             shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 
@@ -96,7 +96,7 @@
                 value="Post" name="commentBtn">
             </form>
     {% endfor %}
-    {% for comment in commentsFeed %}
+    {% for comment in commentsFeed reversed%}
             <div class="bg-gray-100 m-2 border px-5 py-2">
                 <p class="font-medium py-1">{{ comment.user }}</p>
                 <li class="list-none text-base mb-2">{{ comment.comment }}</li>
